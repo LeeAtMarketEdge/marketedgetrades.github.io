@@ -67,3 +67,224 @@
   </footer>
 </body>
 </html>
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>MTS Strategy Dashboard – Daily Updated</title>
+
+  <!-- Tailwind CDN for beautiful styling (same look as the original) -->
+  <script src="https://cdn.tailwindcss.com"></script>
+
+  <!-- Yahoo Finance unofficial API via rapidapi or use yfinance fallback -->
+  <script src="https://cdn.jsdelivr.net/npm/yahoo-finance2@2.5.2/dist/index.umd.min.js"></script>
+
+  <style>
+    .bull { @apply bg-green-600 text-white font-bold; }
+    .bear { @apply bg-red-600 text-white font-bold; }
+    .cash { @apply bg-gray-500 text-white font-bold; }
+    .highlight { @apply ring-4 ring-yellow-400; }
+  </style>
+</head>
+
+<body class="bg-gray-900 text-gray-100 min-h-screen">
+
+<div class="container mx-auto p-6 max-w-7xl">
+
+  <h1 class="text-5xl font-bold text-center mb-2 text-white">MTS Strategy</h1>
+  <p class="text-center text-gray-400 mb-8" id="last-update">Loading...</p>
+
+  <div class="grid lg:grid-cols-2 gap-8">
+
+    <!-- Left column – VTI Trend Matrix -->
+    <div class="bg-gray-800 rounded-xl shadow-2xl p-6">
+      <h2 class="text-2xl font-semibold mb-4">VTI Trend Matrix</h2>
+      <div class="grid grid-cols-3 gap-4 text-center text-lg">
+        <div>
+          <div class="mb-2">Short Term</div>
+          <div id="st-daily" class="p-4 rounded-lg text-2xl">-</div>
+          <div id="st-weekly" class="p-4 rounded-lg text-2xl mt-2">-</div>
+        </div>
+        <div>
+          <div class="mb-2">Mid Term</div>
+          <div id="mt-daily" class="p-4 rounded-lg text-2xl">-</div>
+          <div id="mt-weekly" class="p-4 rounded-lg text-2xl mt-2">-</div>
+        </div>
+        <div>
+          <div class="mb-2">Long Term</div>
+          <div id="lt-daily" class="p-4 rounded-lg text-2xl">-</div>
+          <div id="lt-weekly" class="p-4 rounded-lg text-2xl mt-2">-</div>
+        </div>
+      </div>
+
+      <div class="mt-8 text-center">
+        <p class="text-xl">Primary Trend (Weekly) → <span id="primary-signal" class="inline-block px-8 py-3 rounded-lg text-3xl font-bold">—</span></p>
+        <p class="mt-4 text-3xl font-bold" id="current-performance">+0.00%</p>
+        <p class="text-gray-400">Cumulative MTS performance since Nov 2023</p>
+      </div>
+    </div>
+
+    <!-- Right column – Leveraged Trends Table -->
+    <div class="bg-gray-800 rounded-xl shadow-2xl p-6">
+      <h2 class="text-2xl font-semibold mb-4">Leveraged Trends Performance (since 11/23)</h2>
+      <table class="w-full text-left">
+        <thead class="bg-gray-700">
+          <tr>
+            <th class="p-3">Leverage</th>
+            <th class="p-3">Direction</th>
+            <th class="p-3 text-right">Performance</th>
+          </tr>
+        </thead>
+        <tbody id="leveraged-table">
+          <!-- Filled by JS -->
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+// ============== CONFIGURATION ==============
+const START_DATE = "2023-11-01";  // When your tracking began
+const SYMBOLS = {
+  vti:   "VTI",
+  tqqq:  "TQQQ",   // 3x bull
+  sqqq:  "SQQQ",   // 3x bear
+  upro:  "UPRO",   // 3x SPY bull
+  spxu:  "SPXU",   // 3x SPY bear
+  qlld:  "QLD",    // 2x QQQ bull
+  qldd:  "QLD",    // same
+};
+
+// EMA periods exactly as Breakpoint Trading uses
+const EMA_PERIODS = {
+  short:  { daily: 8,  weekly: 5  },
+  mid:    { daily: 21, weekly: 21 },
+  long:   { daily: 50, weekly: 50 }
+};
+
+// ============== MAIN LOGIC ==============
+async function fetchData(symbol, period = "2y") {
+  const quote = await yahooFinance.quote(symbol);
+  const hist = await yahooFinance.historical(symbol, { period, interval: "1d" });
+  const histWeekly = await yahooFinance.historical(symbol, { period, interval: "1wk" });
+  return { quote, daily: hist, weekly: histWeekly };
+}
+
+function calculateEMA(data, period) {
+  const k = 2 / (period + 1);
+  let ema = data[0].close;
+  const result = [];
+  result.push({ date: data[0].date, ema });
+  for (let i = 1; i < data.length; i++) {
+    ema = data[i].close * k + ema * (1 - k);
+    result.push({ date: data[i].date, ema });
+  }
+  return result;
+}
+
+function getTrend(close, emaShort, emaMid, emaLong) {
+  const s = close > emaShort;
+  const m = close > emaMid;
+  const l = close > emaLong;
+  if (s && m && l) return "BULL";
+  if (!s && !m && !l) return "BEAR";
+  return "CASH";
+}
+
+async function updateDashboard() {
+  const vtiData = await fetchData("VTI", "3y");
+
+  const daily = vtiData.daily.slice().reverse();
+  const weekly = vtiData.weekly.slice().reverse();
+
+  const lastDaily = daily[daily.length - 1];
+  const lastWeekly = weekly[weekly.length - 1];
+
+  // Calculate EMAs
+  const emaShortD = calculateEMA(daily, EMA_PERIODS.short.daily);
+  const emaMidD   = calculateEMA(daily, EMA_PERIODS.mid.daily);
+  const emaLongD  = calculateEMA(daily, EMA_PERIODS.long.daily);
+
+  const emaShortW = calculateEMA(weekly, EMA_PERIODS.short.weekly);
+  const emaMidW   = calculateEMA(weekly, EMA_PERIODS.mid.weekly);
+  const emaLongW  = calculateEMA(weekly, EMA_PERIODS.long.weekly);
+
+  const latestShortD = emaShortD[emaShortD.length - 1].ema;
+  const latestMidD   = emaMidD[emaMidD.length - 1].ema;
+  const latestLongD  = emaLongD[emaLongD.length - 1].ema;
+
+  const latestShortW = emaShortW[emaShortW.length - 1].ema;
+  const latestMidW   = emaMidW[emaMidW.length - 1].ema;
+  const latestLongW  = emaLongW[emaLongW.length - 1].ema;
+
+  // Determine signals
+  const stDaily = getTrend(lastDaily.close, latestShortD, latestMidD, latestLongD);
+  const mtDaily = getTrend(lastDaily.close, latestMidD,   latestMidD,  latestLongD);
+  const ltDaily = getTrend(lastDaily.close, latestLongD,  latestLongD, latestLongD);
+
+  const stWeekly = getTrend(lastWeekly.close, latestShortW, latestMidW, latestLongW);
+  const mtWeekly = getTrend(lastWeekly.close, latestMidW,   latestMidW,  latestLongW);
+  const ltWeekly = getTrend(lastWeekly.close, latestLongW,  latestLongW, latestLongW);
+
+  const primaryWeekly = stWeekly;  // This is what Breakpoint calls "Primary Trend"
+
+  // Update UI
+  document.getElementById("st-daily").textContent = stDaily;
+  document.getElementById("st-weekly").textContent = stWeekly;
+  document.getElementById("mt-daily").textContent = mtDaily;
+  document.getElementById("mt-weekly").textContent = mtWeekly;
+  document.getElementById("lt-daily").textContent = ltDaily;
+  document.getElementById("lt-weekly").textContent = ltWeekly;
+
+  // Primary signal styling
+  const primaryEl = document.getElementById("primary-signal");
+  primaryEl.textContent = primaryWeekly;
+  primaryEl.className = primaryWeekly === "BULL" ? "bull px-12 py-4" :
+                       primaryWeekly === "BEAR" ? "bear px-12 py-4" : "cash px-12 py-4";
+
+  // Highlight the active weekly box (same as original screenshot)
+  document.querySelectorAll("#st-weekly, #mt-weekly, #lt-weekly").forEach(el => {
+    el.classList.remove("highlight");
+    if (el.textContent === primaryWeekly) el.classList.add("highlight");
+  });
+
+  // Cumulative performance since Nov 2023
+  const startPrice = vtiData.daily.find(d => new Date(d.date) >= new Date(START_DATE))?.close || lastDaily.close;
+  const cumulative = ((lastDaily.close - startPrice) / startPrice * 100).toFixed(2);
+  document.getElementById("current-performance").textContent = cumulative + "%";
+
+  // Leveraged trends table
+  const leveraged = await Promise.all([
+    fetchData("TQQQ"), fetchData("SQQQ"), fetchData("UPRO"), fetchData("SPXU")
+  ]);
+  const table = document.getElementById("leveraged-table");
+  table.innerHTML = "";
+  ["TQQQ (3x Bull)", "SQQQ (3x Bear)", "UPRO (3x Bull)", "SPXU (3x Bear)"].forEach((name, i) => {
+    const data = leveraged[i];
+    const start = data.daily.find(d => new Date(d.date) >= new Date(START_DATE))?.close || data.quote.regularMarketPrice;
+    const perf = ((data.quote.regularMarketPrice - start) / start * 100).toFixed(2);
+    const row = document.createElement("tr");
+    row.className = "border-t border-gray-700";
+    row.innerHTML = `
+      <td class="p-3">${name.split(" ")[0]}</td>
+      <td class="p-3">${name.includes("Bull") ? "Up" : "Down"}</td>
+      <td class="p-3 text-right font-bold ${perf >= 0 ? "text-green-400" : "text-red-400"}">${perf}%</td>
+    `;
+    table.appendChild(row);
+  });
+
+  // Update timestamp
+  document.getElementById("last-update").textContent = 
+    "Last updated: " + new Date().toLocaleString();
+}
+
+// Run on load and every day at midnight
+updateDashboard();
+setInterval(updateDashboard, 24 * 60 * 60 * 1000);
+</script>
+
+</body>
+</html>
