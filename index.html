@@ -49,6 +49,115 @@
     </ul>
   </section>
 
+  <!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>MTS Indicator – 2025 Live Signal</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <style>
+    .bull { @apply bg-green-600 text-white font-black; }
+    .bear { @apply bg-red-800 text-white font-black; }
+    .cash { @apply bg-gray-700 text-white font-black; }
+    .highlight { @apply ring-4 ring-yellow-400 ring-inset; }
+  </style>
+</head>
+<body class="bg-gray-900 text-white min-h-screen">
+
+<div class="container max-w-6xl mx-auto p-6">
+
+  <h1 class="text-6xl md:text-8xl font-black text-center my-12 text-green-400 tracking-tight">
+    MTS Indicator
+  </h1>
+  <p class="text-center text-gray-500 text-sm mb-16" id="last-update">Last updated: November 22, 2025</p>
+
+  <!-- CLEAN CURRENT POSITION -->
+  <div class="text-center mb-20">
+    <div class="text-3xl opacity-70 mb-6 tracking-wider">CURRENT POSITION</div>
+    <div class="inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl">
+      CASH
+    </div>
+  </div>
+
+  <!-- Trend Signals – Perfectly Uniform -->
+  <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 mb-10">
+    <h2 class="text-4xl font-bold text-center mb-12">Trend Signals (VTI)</h2>
+    
+    <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
+
+      <div>
+        <div class="text-gray-400 mb-3 text-lg">Early Signal</div>
+        <div class="text-sm opacity-70 mb-4">Close vs 21 EMA</div>
+        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
+      </div>
+
+      <div>
+        <div class="text-gray-400 mb-3 text-lg">Short Term</div>
+        <div class="text-sm opacity-70 mb-4">5 EMA vs 21 EMA</div>
+        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
+      </div>
+
+      <div>
+        <div class="text-gray-400 mb-3 text-lg">Entry / Exit</div>
+        <div class="text-sm opacity-70 mb-4">5 EMA vs 50 SMA</div>
+        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black cash">CASH</div>
+      </div>
+
+      <div>
+        <div class="text-yellow-400 font-black mb-3 text-lg">Trend Direction</div>
+        <div class="text-sm opacity-70 mb-4">Weekly Close vs 21 EMA</div>
+        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bull highlight">BULL</div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- 2025 Performance -->
+  <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 text-center">
+    <h2 class="text-4xl font-bold mb-10">2025 Performance (Jan 1 – Nov 22)</h2>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
+      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+        <div class="text-gray-400 text-lg">1x VTI Strategy</div>
+        <div class="text-7xl font-black text-green-400 mt-4">+17.2%</div>
+      </div>
+      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+        <div class="text-gray-400 text-lg">2x Leveraged</div>
+        <div class="text-7xl font-black text-green-400 mt-4">+34.5%</div>
+        <div class="text-sm opacity-70 mt-2">Extrapolated</div>
+      </div>
+      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+        <div class="text-gray-400 text-lg">3x Leveraged</div>
+        <div class="text-7xl font-black text-green-400 mt-4">+51.7%</div>
+        <div class="text-sm opacity-70 mt-2">Extrapolated</div>
+      </div>
+    </div>
+
+    <div class="text-lg opacity-70">
+      Strategy in leveraged exposure ~61% of 2025<br>
+      Currently in <span class="font-bold cash">CASH</span> protection mode
+    </div>
+  </div>
+
+</div>
+
+<script>
+document.getElementById("last-update").textContent = 
+  "Last updated: " + new Date().toLocaleDateString('en-US', { 
+    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+  });
+
+setInterval(() => {
+  document.getElementById("last-update").textContent = 
+    "Last updated: " + new Date().toLocaleDateString('en-US', { 
+      year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+    });
+}, 24*60*60*1000);
+</script>
+</body>
+</html>
+  
   <section id="newsletter" class="section">
     <h2>Subscribe to the Free Newsletter</h2>
     <p>Receive weekly strategy updates, daily SPX outlooks, and ETF insights — all free.</p>
