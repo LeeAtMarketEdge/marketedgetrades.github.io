@@ -190,9 +190,15 @@ document.getElementById("last-update").textContent =
   </section>
 
   <section id="feed" class="section">
-    <h2>Live Daily Feed</h2>
-    <p>Follow me on Twitter for daily SPX commentary and watchlists:</p>
-    <iframe src="https://twitframe.com/show?url=https://twitter.com/LeeAtMarketEdge" height="600"></iframe>
+    <h2>Live Instagram Feed</h2>
+    <p>Follow for visual trading insights, charts, and ETF updates:</p>
+    <!-- NoCodeAPI Instagram Embed – Replace with your API URL -->
+    <script type="module" src="https://unpkg.com/@nocodeapi/embed-instagram-feed@latest/embed-instagram-feed.js?module"></script>
+    <embed-instagram-feed 
+      url="https://instagram-v1.nocodeapi.com/YOUR_API_KEY?username=leeatmarketedge&limit=6&grid=3"
+      class="instagram-feed">
+    </embed-instagram-feed>
+    <p class="text-sm opacity-70 mt-4"><a href="https://www.instagram.com/leeatmarketedge/" target="_blank">View full profile →</a></p>
   </section>
 
   <footer>
