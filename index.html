@@ -54,7 +54,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MTS Indicator – 2025 Live Signal</title>
+  <title>MTS Indicator – Market Edge Live Signal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .bull { @apply bg-green-600 text-white font-black; }
@@ -69,7 +69,7 @@
 <div class="container max-w-6xl mx-auto p-6">
 
   <h1 class="text-6xl md:text-8xl font-black text-center my-12 text-green-400 tracking-tight">
-    MTS Indicator
+    Market Edge MTS
   </h1>
   <p class="text-center text-gray-500 text-sm mb-16" id="last-update">Last updated: November 22, 2025</p>
 
@@ -81,33 +81,37 @@
     </div>
   </div>
 
-  <!-- Trend Signals -->
+  <!-- Trend Signals – 100% Aligned with Your Framework -->
   <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 mb-10">
-    <h2 class="text-4xl font-bold text-center mb-12">Trend Signals (VTI)</h2>
+    <h2 class="text-4xl font-bold text-center mb-12">Trend Signals (VTI Daily)</h2>
     
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
 
+      <!-- 1. Warning Signal -->
       <div>
-        <div class="text-gray-400 mb-3 text-lg">Early Signal</div>
-        <div class="text-sm opacity-70 mb-4">Close vs 21 EMA</div>
+        <div class="text-gray-400 mb-3 text-lg">Warning Signal</div>
+        <div class="text-sm opacity-70 mb-4">Price vs 21 EMA</div>
         <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
       </div>
 
+      <!-- 2. Short Term Momentum -->
       <div>
-        <div class="text-gray-400 mb-3 text-lg">Short Term</div>
+        <div class="text-gray-400 mb-3 text-lg">Short Term Momentum</div>
         <div class="text-sm opacity-70 mb-4">5 EMA vs 21 EMA</div>
         <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
       </div>
 
-      <!-- Entry / Exit → Shows LONG or CASH -->
+      <!-- 3. MASTER SIGNAL – Entry / Exit -->
       <div>
         <div class="text-gray-400 mb-3 text-lg">Entry / Exit</div>
         <div class="text-sm opacity-70 mb-4">5 EMA vs 50 SMA</div>
         <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black cash">CASH</div>
+        <p class="text-xs mt-3 opacity-60">Only trade in direction of this signal</p>
       </div>
 
+      <!-- 4. Primary Trend Filter (Weekly) -->
       <div>
-        <div class="text-yellow-400 font-black mb-3 text-lg">Trend Direction</div>
+        <div class="text-yellow-400 font-black mb-3 text-lg">Primary Trend Filter</div>
         <div class="text-sm opacity-70 mb-4">Weekly Close vs 21 EMA</div>
         <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bull highlight">BULL</div>
       </div>
@@ -132,38 +136,47 @@
       <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
         <div class="text-gray-400 text-lg">3x Leveraged</div>
         <div class="text-7xl font-black text-green-400 mt-4">+51.7%</div>
-        <div class="text-sm opacity="text-sm opacity-70 mt-2">Extrapolated</div>
+        <div class="text-sm opacity-70 mt-2">Extrapolated</div>
       </div>
     </div>
 
-    <div class="text-lg opacity-70">
-      Strategy in leveraged exposure ~61% of 2025<br>
-      Currently in <span class="font-bold cash">CASH</span> protection mode
+    <div class="text-lg opacity-70 space-y-2">
+      <p>• Strategy in leveraged exposure ~61% of 2025</p>
+      <p>• Only 4 high-conviction trades executed so far</p>
+      <p>• Currently in <span class="font-bold cash">CASH</span> protection mode</p>
     </div>
+  </div>
+
+  <!-- Rules Summary -->
+  <div class="bg-gray-800/50 rounded-3xl p-8 mt-12 text-center text-sm opacity-80">
+    <p class="font-bold mb-2">Market Edge Core Rules</p>
+    <p>Trade only when 5 EMA > 50 SMA • Enter on 21 EMA confirmation • Exit on momentum break<br>
+    Maximum 3–6 trades per year • 7% stop loss • Never chase — wait for the signal</p>
   </div>
 
 </div>
 
 <script>
 // Current real state – November 22, 2025
-const isLong = false;  // 5 EMA is currently BELOW 50 SMA → CASH
+const isLong = false;  // 5 EMA < 50 SMA → CASH
 
-// Update Entry/Exit box to show LONG or CASH
-const entryExitBox = document.querySelectorAll('.grid > div')[2].querySelector('div:nth-child(3)');
-entryExitBox.textContent = isLong ? "LONG" : "CASH";
-entryExitBox.className = isLong 
+// Update Entry/Exit box
+const entryBox = document.querySelectorAll('.grid > div')[2].querySelector('div:nth-child(3)');
+entryBox.textContent = isLong ? "LONG" : "CASH";
+entryBox.className = isLong 
   ? "inline-block px-10 py-8 rounded-2xl text-5xl font-black long"
   : "inline-block px-10 py-8 rounded-2xl text-5xl font-black cash";
 
-// Also sync Current Position box
+// Sync Current Position
 document.querySelector('.shadow-2xl').textContent = isLong ? "LONG" : "CASH";
 document.querySelector('.shadow-2xl').className = isLong 
   ? "inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider long shadow-2xl"
   : "inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl";
 
+// Update timestamp
 document.getElementById("last-update").textContent = 
   "Last updated: " + new Date().toLocaleDateString('en-US', { 
-    year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit' 
+    month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit'
   });
 </script>
 </body>
