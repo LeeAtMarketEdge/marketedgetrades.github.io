@@ -57,7 +57,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MTS Indicator – Market Edge Live Signal</title>
+  <title>Market Edge MTS – Live Daily Signal</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .bull { @apply bg-green-600 text-white font-black; }
@@ -74,113 +74,233 @@
   <h1 class="text-6xl md:text-8xl font-black text-center my-12 text-green-400 tracking-tight">
     Market Edge MTS
   </h1>
-  <p class="text-center text-gray-500 text-sm mb-16" id="last-update">Last updated: November 22, 2025</p>
+  <p class="text-center text-gray-500 text-sm mb-4" id="last-update">Updating live data...</p>
 
   <!-- Current Position -->
   <div class="text-center mb-20">
     <div class="text-3xl opacity-70 mb-6 tracking-wider">CURRENT POSITION</div>
-    <div class="inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl">
-      CASH
+    <div id="position" class="inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl">
+      LOADING
     </div>
   </div>
 
-  <!-- Trend Signals – 100% Aligned with Your Framework -->
+  <!-- Trend Signals -->
   <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 mb-10">
     <h2 class="text-4xl font-bold text-center mb-12">Trend Signals (VTI Daily)</h2>
     
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
 
-      <!-- 1. Warning Signal -->
       <div>
         <div class="text-gray-400 mb-3 text-lg">Warning Signal</div>
         <div class="text-sm opacity-70 mb-4">Price vs 21 EMA</div>
-        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
+        <div id="warning" class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">—</div>
       </div>
 
-      <!-- 2. Short Term Momentum -->
       <div>
         <div class="text-gray-400 mb-3 text-lg">Short Term Momentum</div>
         <div class="text-sm opacity-70 mb-4">5 EMA vs 21 EMA</div>
-        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
+        <div id="short" class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">—</div>
       </div>
 
-      <!-- 3. MASTER SIGNAL – Entry / Exit -->
       <div>
         <div class="text-gray-400 mb-3 text-lg">Entry / Exit</div>
         <div class="text-sm opacity-70 mb-4">5 EMA vs 50 SMA</div>
-        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black cash">CASH</div>
-        <p class="text-xs mt-3 opacity-60">Only trade in direction of this signal</p>
+        <div id="entry" class="inline-block px-10 py-8 rounded-2xl text-5xl font-black cash">—</div>
+        <p class="text-xs mt-3 opacity-60">Master signal – only trade this direction</p>
       </div>
 
-      <!-- 4. Primary Trend Filter (Weekly) -->
       <div>
         <div class="text-yellow-400 font-black mb-3 text-lg">Primary Trend Filter</div>
         <div class="text-sm opacity-70 mb-4">Weekly Close vs 21 EMA</div>
-        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bull highlight">BULL</div>
+        <div id="weekly" class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bull highlight">—</div>
       </div>
 
     </div>
   </div>
 
-  <!-- 2025 Performance -->
+  <!-- 2025 Performance (Live-Calculated) -->
   <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 text-center">
-    <h2 class="text-4xl font-bold mb-10">2025 Performance (Jan 1 – Nov 22)</h2>
-    
+    <h2 class="text-4xl font-bold mb-10">2025 Performance (Jan 1 – Today)</h2>
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+      <div class="bg-gray-700/50 rounded-2xl p-8">
         <div class="text-gray-400 text-lg">1x VTI Strategy</div>
-        <div class="text-7xl font-black text-green-400 mt-4">+17.2%</div>
+        <div class="text-7xl font-black text-green-400 mt-4" id="perf1x">+0.0%</div>
       </div>
-      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+      <div class="bg-gray-700/50 rounded-2xl p-8">
         <div class="text-gray-400 text-lg">2x Leveraged</div>
-        <div class="text-7xl font-black text-green-400 mt-4">+34.5%</div>
+        <div class="text-7xl font-black text-green-400 mt-4" id="perf2x">+0.0%</div>
         <div class="text-sm opacity-70 mt-2">Extrapolated</div>
       </div>
-      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+      <div class="bg-gray-700/50 rounded-2xl p-8">
         <div class="text-gray-400 text-lg">3x Leveraged</div>
-        <div class="text-7xl font-black text-green-400 mt-4">+51.7%</div>
+        <div class="text-7xl font-black text-green-400 mt-4" id="perf3x">+0.0%</div>
         <div class="text-sm opacity-70 mt-2">Extrapolated</div>
       </div>
     </div>
-
-    <div class="text-lg opacity-70 space-y-2">
-      <p>• Strategy in leveraged exposure ~61% of 2025</p>
-      <p>• Only 4 high-conviction trades executed so far</p>
-      <p>• Currently in <span class="font-bold cash">CASH</span> protection mode</p>
-    </div>
+    <div class="text-sm opacity-70 mt-4" id="exposure-note">Loading exposure stats...</div>
   </div>
 
-  <!-- Rules Summary -->
-  <div class="bg-gray-800/50 rounded-3xl p-8 mt-12 text-center text-sm opacity-80">
-    <p class="font-bold mb-2">Market Edge Core Rules</p>
-    <p>Trade only when 5 EMA > 50 SMA • Enter on 21 EMA confirmation • Exit on momentum break<br>
-    Maximum 3–6 trades per year • 7% stop loss • Never chase — wait for the signal</p>
+  <!-- Legal Disclaimer -->
+  <div class="bg-gray-800/50 rounded-3xl p-8 mt-12 text-center text-sm opacity-80 max-w-4xl mx-auto leading-relaxed">
+    <p class="font-bold text-yellow-400 mb-3">DISCLAIMER</p>
+    <p>This indicator is for <strong>educational and demonstration purposes only</strong>. It is not financial advice, a recommendation, or an offer to buy or sell securities. Past performance is not indicative of future results. Trading leveraged ETFs involves substantial risk of loss. You are solely responsible for your own investment decisions. Market Edge and Lee assume no liability for any trading losses.</p>
   </div>
 
 </div>
 
 <script>
-// Current real state – November 22, 2025
-const isLong = false;  // 5 EMA < 50 SMA → CASH
+async function fetchData() {
+  const getUrl = (period, interval) => `https://query1.finance.yahoo.com/v7/finance/download/VTI?period1=${Math.floor((Date.now() - period * 365 * 24 * 3600 * 1000) / 1000)}&period2=${Math.floor(Date.now() / 1000)}&interval=${interval}&events=history&includeAdjustedClose=true`;
 
-// Update Entry/Exit box
-const entryBox = document.querySelectorAll('.grid > div')[2].querySelector('div:nth-child(3)');
-entryBox.textContent = isLong ? "LONG" : "CASH";
-entryBox.className = isLong 
-  ? "inline-block px-10 py-8 rounded-2xl text-5xl font-black long"
-  : "inline-block px-10 py-8 rounded-2xl text-5xl font-black cash";
+  try {
+    const [dailyResp, weeklyResp] = await Promise.all([
+      fetch(getUrl(730, '1d')),  // 2 years daily
+      fetch(getUrl(1095, '1wk')) // 3 years weekly
+    ]);
 
-// Sync Current Position
-document.querySelector('.shadow-2xl').textContent = isLong ? "LONG" : "CASH";
-document.querySelector('.shadow-2xl').className = isLong 
-  ? "inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider long shadow-2xl"
-  : "inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl";
+    const parseCSV = async (resp) => {
+      const text = await resp.text();
+      const lines = text.split('\n').slice(1).filter(line => line.trim());
+      return lines.map(line => {
+        const parts = line.split(',');
+        if (parts.length < 7) return null;
+        const date = new Date(parts[0]);
+        const adjClose = parseFloat(parts[6]);
+        return isNaN(adjClose) ? null : { date, close: adjClose };
+      }).filter(Boolean).sort((a, b) => a.date - b.date);  // Chronological
+    };
 
-// Update timestamp
-document.getElementById("last-update").textContent = 
-  "Last updated: " + new Date().toLocaleDateString('en-US', { 
-    month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit'
-  });
+    return {
+      daily: await parseCSV(dailyResp),
+      weekly: await parseCSV(weeklyResp)
+    };
+  } catch (e) {
+    console.error('Fetch error:', e);
+    throw e;
+  }
+}
+
+function computeEMA(closes, period) {
+  if (closes.length < period) return [];
+  const k = 2 / (period + 1);
+  let ema = closes[0];
+  const emas = [ema];
+  for (let i = 1; i < closes.length; i++) {
+    ema = closes[i] * k + ema * (1 - k);
+    emas.push(ema);
+  }
+  return emas;
+}
+
+function computeSMA(closes, period) {
+  const smas = [];
+  for (let i = 0; i < closes.length; i++) {
+    if (i < period - 1) {
+      smas.push(NaN);
+      continue;
+    }
+    const slice = closes.slice(i - period + 1, i + 1);
+    smas.push(slice.reduce((sum, val) => sum + val, 0) / period);
+  }
+  return smas;
+}
+
+function computeYTDPerformance(daily, ytdStart) {
+  const ytdDaily = daily.filter(d => d.date >= ytdStart);
+  if (ytdDaily.length < 50) return { perf: 0, exposure: 0 };
+
+  let balance = 100000;
+  let inLong = false;
+  let exposureDays = 0;
+  const closes = ytdDaily.map(d => d.close);
+  const ema5s = computeEMA(closes, 5);
+  const sma50s = computeSMA(closes, 50);
+
+  for (let i = 49; i < ytdDaily.length; i++) {  // After SMA warmup
+    const currEma5 = ema5s[i];
+    const currSma50 = sma50s[i];
+    const shouldLong = currEma5 > currSma50;
+
+    if (shouldLong && !inLong) inLong = true;
+    if (!shouldLong && inLong) inLong = false;
+
+    if (inLong) {
+      const dailyReturn = closes[i] / closes[i-1] - 1;
+      balance *= (1 + dailyReturn);
+      exposureDays++;
+    }
+  }
+
+  const perf = ((balance - 100000) / 100000 * 100);
+  const exposure = ((exposureDays / (ytdDaily.length - 49)) * 100).toFixed(0);
+  return { perf, exposure };
+}
+
+async function updateSignals() {
+  try {
+    const { daily, weekly } = await fetchData();
+    if (daily.length < 100 || weekly.length < 21) throw new Error('Insufficient data');
+
+    // Compute indicators
+    const closesDaily = daily.map(d => d.close);
+    const ema5Daily = computeEMA(closesDaily, 5);
+    const ema21Daily = computeEMA(closesDaily, 21);
+    const sma50Daily = computeSMA(closesDaily, 50);
+
+    const latestClose = closesDaily[closesDaily.length - 1];
+    const latestEma21 = ema21Daily[ema21Daily.length - 1];
+    const latestEma5 = ema5Daily[ema5Daily.length - 1];
+    const latestSma50 = sma50Daily[sma50Daily.length - 1];
+
+    const warningBull = latestClose > latestEma21;
+    const shortBull = latestEma5 > latestEma21;
+    const longSignal = latestEma5 > latestSma50;
+
+    const weeklyCloses = weekly.map(d => d.close);
+    const weeklyEma21 = computeEMA(weeklyCloses, 21);
+    const latestWeeklyClose = weeklyCloses[weeklyCloses.length - 1];
+    const latestWeeklyEma21 = weeklyEma21[weeklyEma21.length - 1];
+    const primaryTrendBull = latestWeeklyClose > latestWeeklyEma21;
+
+    // Update signals
+    document.getElementById('warning').textContent = warningBull ? 'BULL' : 'BEAR';
+    document.getElementById('warning').className = warningBull ? 'inline-block px-10 py-8 rounded-2xl text-5xl font-black bull' : 'inline-block px-10 py-8 rounded-2xl text-5xl font-black bear';
+
+    document.getElementById('short').textContent = shortBull ? 'BULL' : 'BEAR';
+    document.getElementById('short').className = shortBull ? 'inline-block px-10 py-8 rounded-2xl text-5xl font-black bull' : 'inline-block px-10 py-8 rounded-2xl text-5xl font-black bear';
+
+    document.getElementById('entry').textContent = longSignal ? 'LONG' : 'CASH';
+    document.getElementById('entry').className = longSignal ? 'inline-block px-10 py-8 rounded-2xl text-5xl font-black long' : 'inline-block px-10 py-8 rounded-2xl text-5xl font-black cash';
+
+    document.getElementById('weekly').textContent = primaryTrendBull ? 'BULL' : 'CASH';
+    document.getElementById('weekly').className = primaryTrendBull ? 'inline-block px-10 py-8 rounded-2xl text-5xl font-black bull highlight' : 'inline-block px-10 py-8 rounded-2xl text-5xl font-black cash';
+
+    // Update position
+    document.getElementById('position').textContent = longSignal ? 'LONG' : 'CASH';
+    document.getElementById('position').className = longSignal ? 'inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider long shadow-2xl' : 'inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl';
+
+    // 2025 YTD
+    const ytdStart = new Date('2025-01-01');
+    const { perf, exposure } = computeYTDPerformance(daily, ytdStart);
+    const perf1x = perf.toFixed(1);
+    document.getElementById('perf1x').textContent = `+${perf1x}%`;
+    document.getElementById('perf2x').textContent = `+${(perf * 2).toFixed(1)}%`;
+    document.getElementById('perf3x').textContent = `+${(perf * 3).toFixed(1)}%`;
+    document.getElementById('exposure-note').textContent = `• Leveraged exposure: ~${exposure}% of 2025 • ${longSignal ? 'Currently LONG' : 'Currently CASH'}`;
+
+    // Timestamp
+    document.getElementById('last-update').textContent = `Last updated: ${new Date().toLocaleString('en-US', { month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit' })}`;
+
+  } catch (e) {
+    console.error('Update error:', e);
+    document.getElementById('last-update').textContent = 'Data temporarily unavailable – retrying in 10s...';
+    setTimeout(updateSignals, 10000);
+  }
+}
+
+// Auto-update on load + daily
+updateSignals();
+setInterval(updateSignals, 24 * 60 * 60 * 1000);
 </script>
 </body>
 </html>
