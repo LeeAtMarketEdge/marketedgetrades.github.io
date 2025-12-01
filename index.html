@@ -57,12 +57,12 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>MTS Indicator – Market Edge Live Signal</title>
+  <title>Market Edge Strategy</title>
   <script src="https://cdn.tailwindcss.com"></script>
   <style>
     .bull { @apply bg-green-600 text-white font-black; }
     .bear { @apply bg-red-800 text-white font-black; }
-    .long { @apply bg-green-600 text-white font-black; }
+    .long { @apply bg-emerald-500 text-white font-black; }
     .cash { @apply bg-gray-700 text-white font-black; }
     .highlight { @apply ring-4 ring-yellow-400 ring-inset; }
   </style>
@@ -74,35 +74,35 @@
   <h1 class="text-6xl md:text-8xl font-black text-center my-12 text-green-400 tracking-tight">
     Market Edge Strategy
   </h1>
-  <p class="text-center text-gray-500 text-sm mb-16" id="last-update">Last updated: November 22, 2025</p>
+  <p class="text-center text-gray-500 text-sm mb-16" id="last-update">Loading...</p>
 
-  <!-- Current Position -->
+  <!-- CURRENT POSITION -->
   <div class="text-center mb-20">
     <div class="text-3xl opacity-70 mb-6 tracking-wider">CURRENT POSITION</div>
-    <div class="inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl">
-      CASH
+    <div id="current-position" class="inline-block px-24 py-14 rounded-3xl text-9xl font-black tracking-wider long shadow-2xl transition-all duration-1000">
+      LONG
     </div>
   </div>
 
-  <!-- Trend Signals -->
-  <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 mb-10">
+  <!-- TREND SIGNALS -->
+  <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 mb-12">
     <h2 class="text-4xl font-bold text-center mb-12">Trend Signals (VTI Daily)</h2>
     
     <div class="grid grid-cols-2 lg:grid-cols-4 gap-8 text-center">
       <div>
         <div class="text-gray-400 mb-3 text-lg">Warning Signal</div>
         <div class="text-sm opacity-70 mb-4">Price vs 21 EMA</div>
-        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
+        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bull">BULL</div>
       </div>
       <div>
         <div class="text-gray-400 mb-3 text-lg">Short Term Momentum</div>
         <div class="text-sm opacity-70 mb-4">5 EMA vs 21 EMA</div>
-        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bear">BEAR</div>
+        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black bull">BULL</div>
       </div>
       <div>
         <div class="text-gray-400 mb-3 text-lg">Entry / Exit</div>
         <div class="text-sm opacity-70 mb-4">5 EMA vs 50 SMA</div>
-        <div class="inline-block px-10 py-8 rounded-2xl text-5xl font-black cash">CASH</div>
+        <div id="entry-signal" class="inline-block px-10 py-8 rounded-2xl text-5xl font-black long">LONG</div>
         <p class="text-xs mt-3 opacity-60">Only trade in direction of this signal</p>
       </div>
       <div>
@@ -113,73 +113,75 @@
     </div>
   </div>
 
-  <!-- 2025 Performance -->
+  <!-- 2025 PERFORMANCE -->
   <div class="bg-gray-800 rounded-3xl shadow-2xl p-10 text-center">
-    <h2 class="text-4xl font-bold mb-10">2025 Performance </h2>
+    <h2 class="text-4xl font-bold mb-10">2025 Performance</h2>
+    
     <div class="grid grid-cols-1 md:grid-cols-3 gap-8 mb-8">
-      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur border border-gray-600">
         <div class="text-gray-400 text-lg">1x VTI Strategy</div>
-        <div class="text-7xl font-black text-green-400 mt-4">+17.2%</div>
+        <div class="text-7xl font-black text-green-400 mt-4">+19.8%</div>
       </div>
-      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur border border-gray-600">
         <div class="text-gray-400 text-lg">2x Leveraged</div>
-        <div class="text-7xl font-black text-green-400 mt-4">+34.5%</div>
+        <div class="text-7xl font-black text-green-400 mt-4">+39.6%</div>
         <div class="text-sm opacity-70 mt-2">Extrapolated</div>
       </div>
-      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur">
+      <div class="bg-gray-700/50 rounded-2xl p-8 backdrop-blur border border-gray-600">
         <div class="text-gray-400 text-lg">3x Leveraged</div>
-        <div class="text-7xl font-black text-green-400 mt-4">+51.7%</div>
+        <div class="text-7xl font-black text-green-400 mt-4">+59.4%</div>
         <div class="text-sm opacity-70 mt-2">Extrapolated</div>
       </div>
     </div>
+
     <div class="text-lg opacity-70 space-y-2">
-      <p>• Strategy in leveraged exposure ~61% of 2025</p>
-      <p>• Only 4 high-conviction trades executed so far</p>
-      <p>• Currently in <span class="font-bold cash">CASH</span> protection mode</p>
+      <p>• In leveraged exposure ~65% of 2025</p>
+      <p>• 5 high-conviction trades executed</p>
+      <p>• Currently in <span class="font-bold long">LONG</span> momentum mode</p>
     </div>
   </div>
 
-  <!-- Legal Disclaimer – Clean & Professional -->
+  <!-- DISCLAIMER -->
   <div class="bg-gray-800/70 rounded-3xl p-8 mt-12 text-center text-sm opacity-90 border border-gray-700">
-    <p class="font-bold text-yellow-400 mb-2">Important Disclaimer</p>
+    <p class="font-bold text-yellow-400 mb-3">Important Disclaimer</p>
     <p class="leading-relaxed max-w-4xl mx-auto">
-      This indicator and all content on Market Edge are provided for <strong>educational and informational purposes only</strong>. 
-      They do not constitute financial, investment, or trading advice. Past performance is not indicative of future results. 
-      Trading leveraged ETFs involves substantial risk of loss and is not suitable for all investors. 
-      You are solely responsible for your own investment decisions. Market Edge and Lee assume no liability for any losses incurred.
+      This indicator and all content on Market Edge are for <strong>educational and informational purposes only</strong>. 
+      They do not constitute financial advice. Past performance is not indicative of future results. 
+      Trading leveraged ETFs carries significant risk of loss. You are solely responsible for your decisions.
     </p>
   </div>
 
-  <!-- Rules Summary -->
-  <div class="bg-gray-800/50 rounded-3xl p-8 mt-8 text-center text-sm opacity-80">
-    <p class="font-bold mb-2">Market Edge Core Rules</p>
-    <p>Trade only when 5 EMA > 50 SMA • Enter on 21 EMA confirmation • Exit on momentum break<br>
-    Maximum 3–6 trades per year • 7% stop loss • Never chase — wait for the signal</p>
+  <!-- CORE RULES -->
+  <div class="bg-gray-800/40 rounded-3xl p-8 mt-10 text-center text-sm opacity-80">
+    <p class="font-bold mb-3 text-green-400">Market Edge Core Rules</p>
+    <p class="leading-relaxed">
+      Trade only when 5 EMA > 50 SMA • Enter on 21 EMA confirmation • Exit on momentum break<br>
+      Max 3–6 trades per year • 7% stop loss • Never chase
+    </p>
   </div>
 
 </div>
 
 <script>
-// Current real state – November 22, 2025
-const isLong = false;
+// Updated state – December 1, 2025 (VTI bullish)
+const isLong = true;  // 5 EMA now above 50 SMA → LONG
 
-// Update Entry/Exit box
-const entryBox = document.querySelectorAll('.grid > div')[2].querySelector('div:nth-child(3)');
-entryBox.textContent = isLong ? "LONG" : "CASH";
-entryBox.className = isLong ? "inline-block px-10 py-8 rounded-2xl text-5xl font-black long"
-                         : "inline-block px-10 py-8 rounded-2xl text-5xl font-black cash";
+document.getElementById("entry-signal").textContent = isLong ? "LONG" : "CASH";
+document.getElementById("entry-signal").className = isLong 
+  ? "inline-block px-10 py-8 rounded-2xl text-5xl font-black long"
+  : "inline-block px-10 py-8 rounded-2xl text-5xl font-black cash";
 
-// Sync Current Position
-document.querySelector('.shadow-2xl').textContent = isLong ? "LONG" : "CASH";
-document.querySelector('.shadow-2xl').className = isLong 
-  ? "inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider long shadow-2xl"
-  : "inline-block px-20 py-12 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl";
+document.getElementById("current-position").textContent = isLong ? "LONG" : "CASH";
+document.getElementById("current-position").className = isLong
+  ? "inline-block px-24 py-14 rounded-3xl text-9xl font-black tracking-wider long shadow-2xl transition-all duration-1000"
+  : "inline-block px-24 py-14 rounded-3xl text-9xl font-black tracking-wider cash shadow-2xl transition-all duration-1000";
 
 document.getElementById("last-update").textContent = 
   "Last updated: " + new Date().toLocaleDateString('en-US', { 
-    month: 'long', day: 'numeric', year: 'numeric', hour: 'numeric', minute: '2-digit'
+    month: 'long', day: 'numeric', year: 'numeric' 
   });
 </script>
+
 </body>
 </html>
   
